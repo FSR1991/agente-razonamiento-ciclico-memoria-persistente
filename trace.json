@@ -1,0 +1,94 @@
+{
+  "project": "Agente de razonamiento cíclico con memoria persistente",
+  "thread_id": "support-thread-001",
+  "recursion_limit": 10,
+  "persistence": "AsyncSqliteSaver",
+  "database": "agent_memory.sqlite",
+  "execution": {
+    "first_interaction": {
+      "input": "Tengo errores de timeout en conexiones PostgreSQL. ¿Cómo puedo diagnosticarlos?",
+      "messages_after_execution": 8
+    },
+    "second_interaction": {
+      "input": "¿Y qué aspectos debería revisar específicamente?",
+      "messages_after_execution": 10
+    }
+  },
+  "observable_react_trace": [
+    {
+      "type": "human",
+      "content": "Tengo errores de timeout en conexiones PostgreSQL. ¿Cómo puedo diagnosticarlos?"
+    },
+    {
+      "type": "ai",
+      "content": "Necesito buscar información técnica.",
+      "tool_calls": [
+        {
+          "id": "call-search-1",
+          "name": "search_knowledge_base",
+          "args": {
+            "query": "problema desconocido",
+            "limit": 3
+          }
+        }
+      ]
+    },
+    {
+      "type": "tool",
+      "content": [],
+      "name": "search_knowledge_base",
+      "tool_call_id": "call-search-1"
+    },
+    {
+      "type": "ai",
+      "content": "La primera búsqueda no fue suficiente. Refinaré la consulta.",
+      "tool_calls": [
+        {
+          "id": "call-search-2",
+          "name": "search_knowledge_base",
+          "args": {
+            "query": "timeout conexiones PostgreSQL",
+            "limit": 3
+          }
+        }
+      ]
+    },
+    {
+      "type": "tool",
+      "content": "[{\"document_id\": \"KB-001\", \"title\": \"Timeout en conexiones PostgreSQL\"}, {\"document_id\": \"KB-002\", \"title\": \"Redis y pérdida de rendimiento\"}]",
+      "name": "search_knowledge_base",
+      "tool_call_id": "call-search-2"
+    },
+    {
+      "type": "ai",
+      "content": "Encontré un documento relevante. Consultaré su detalle.",
+      "tool_calls": [
+        {
+          "id": "call-detail-1",
+          "name": "get_knowledge_detail",
+          "args": {
+            "document_id": "KB-001"
+          }
+        }
+      ]
+    },
+    {
+      "type": "tool",
+      "content": "{\"document_id\": \"KB-001\", \"title\": \"Timeout en conexiones PostgreSQL\", \"content\": \"Los errores de timeout pueden producirse cuando el pool de conexiones alcanza su límite. Se recomienda revisar el tamaño del pool, el tiempo de espera y la cantidad de conexiones concurrentes.\"}",
+      "name": "get_knowledge_detail",
+      "tool_call_id": "call-detail-1"
+    },
+    {
+      "type": "ai",
+      "content": "El diagnóstico apunta a un posible agotamiento del pool de conexiones PostgreSQL. Se recomienda revisar el tamaño del pool, el tiempo de espera y la cantidad de conexiones concurrentes."
+    },
+    {
+      "type": "human",
+      "content": "¿Y qué aspectos debería revisar específicamente?"
+    },
+    {
+      "type": "ai",
+      "content": "Sí. La información anterior pertenece al mismo hilo de conversación y permanece disponible gracias al checkpoint persistente."
+    }
+  ]
+}
